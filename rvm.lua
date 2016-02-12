@@ -3,35 +3,13 @@ if ... then
 end
 
 
+require "kernels"
+
 local RVM = {}
-
-function gaussian_kernel(x1, x2, width)
-   local w = width or 1.0
-   local d = x1 - x2
-   return torch.exp(- torch.pow(torch.sqrt(d * d), 2) / w)
-end
-
-function polynominal_kernel(x1, x2, constant, power)
-   local c = constant or 1.0
-   local p = power or 1.0
-   local d = x1 - x2
-   return (x1 * x2 + c)^p
-end
-
-function sigmoid_kernel(x1, x2, gain)
-   local g = gain or 1.0
-   return 1.0 / (1.0 + torch.exp(- x1 * x2 * g))
-end
-
-function tanh_kernel(x1, x2, gain)
-   local g = gain or 1.0
-   return torch.tanh(x1 * x2 * g)
-end
-
 
 function RVM.new(kernel)
    local self = {}
-   self.kernel = kernel or sigmoid_kernel
+   self.kernel = kernel or kernels.gaussian_kernel
    return setmetatable(self, {__index = RVM})
 end
 
@@ -125,9 +103,9 @@ if not ... then -- main
    require "gnuplot"
    gnuplot.figure(1)
    gnuplot.title("gaussian-kernel RVM")
-   test_rvm(gaussian_kernel)
+   test_rvm(kernels.gaussian_kernel)
 
    gnuplot.figure(2)
    gnuplot.title("sigmoid-kernel RVM")
-   test_rvm(sigmoid_kernel)
+   test_rvm(kernels.sigmoid_kernel)
 end
