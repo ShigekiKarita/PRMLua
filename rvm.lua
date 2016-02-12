@@ -102,24 +102,21 @@ function test_rvm(kernel)
    x = x + torch.randn(#x) * 2.0
    y = torch.sin(x) + torch.randn(#x) * 0.1
 
-
    r = RVM.new(kernel)
    r:fit(x, y)
-   print(r:predict(3.0))
    test_x = torch.range(-10.0, 20.0, 0.1)
    mean_y = test_x:clone():apply(function(x) return r:mean(x) end)
    var_y = test_x:clone():apply(function(x) return r:variance(x) end) * 10.0
    test_y = r:predict(test_x)
 
-
-   gnuplot.svgfigure('plot.svg')
+   -- gnuplot.pngfigure('plot.png')
    gnuplot.plot(
       {"sample", x, y, "+"},
       {"mean", test_x, mean_y, "-"},
       {"var+", test_x, mean_y + var_y, "-"},
       {"var-", test_x, mean_y - var_y, "-"}
    )
-   gnuplot.plotflush()
+   -- gnuplot.plotflush()
 end
 
 
@@ -130,7 +127,7 @@ if not ... then -- main
    gnuplot.title("gaussian-kernel RVM")
    test_rvm(gaussian_kernel)
 
-   -- gnuplot.figure(2)
-   -- gnuplot.title("sigmoid-kernel RVM")
-   -- test_rvm(sigmoid_kernel)
+   gnuplot.figure(2)
+   gnuplot.title("sigmoid-kernel RVM")
+   test_rvm(sigmoid_kernel)
 end
